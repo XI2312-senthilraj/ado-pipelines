@@ -1,0 +1,19 @@
+trigger:
+ - none
+
+jobs:
+- job: 'firstjob'
+  condition: true
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - template: azure-pipeline-linuxA.yaml
+  displayName: Running A Command on linux template
+
+- job: 'secondjob'
+  condition: true
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - template: azure-pipeline-linuxB.yaml
+  displayName: Running B Command on linux template
