@@ -1,0 +1,15 @@
+trigger:
+ - main
+
+pool:
+  vmImage: ubuntu-latest
+  
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'ACR-amitacr-srvc-con'
+    repository: 'spring/spring-app'
+    command: 'buildAndPush'
+    Dockerfile: 'cin/Dockerfile'
+    tags: 'v1'
+  displayName: Building spring docker file for central india with v1 tag
