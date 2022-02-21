@@ -1,0 +1,62 @@
+trigger:
+ - main
+
+stages:
+- stage: Job_Worker_Build
+  displayName: Job_Worker_Build
+  jobs:
+  - job: 'Build_v1'
+    displayName: Building test file
+    pool:  
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: Bash@3
+      inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              
+              echo 'Hello world'
+  - job: 'Secute_second_job'
+    displayName: Building second_job
+    pool:  
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: Bash@3
+      inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              
+              echo 'Hello world 2'
+- stage: Second_Stage
+  displayName: Second Build
+  jobs:
+  - job: 'Build_v2'
+    displayName: Building test file
+    pool:  
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: Bash@3
+      inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              
+              echo 'Hello world'
+  - job: 'Execute_second_job'
+    displayName: Building second_job
+    pool:  
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: Bash@3
+      inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              
+              echo 'Hello world 2'
