@@ -2,7 +2,7 @@ trigger:
  - main
 
 stages:
-- stage: Job_Worker_Build
+- stage: First_Stage
   displayName: Job_Worker_Build
   jobs:
   - job: 'Build_v1'
