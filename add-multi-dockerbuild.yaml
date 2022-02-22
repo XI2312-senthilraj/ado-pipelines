@@ -31,8 +31,8 @@ stages:
     - task: MavenAuthenticate@0
       displayName: Maven Authenticate
       inputs:
-        artifactsFeeds: 'amit-apps-ctw-shared, index-realtime-ctw-shared, singh-ctw-org-feed, singh-ctw-org-shared-feed'
-        mavenServiceConnections: 'singh-ptw-amit-apps-index-ptw ,singh-ptw-tech-eng-platform'
+        artifactsFeeds: 'amit-apps'
+        mavenServiceConnections: 'singh-ptw-amit-apps'
     - task: Maven@3
       displayName: Maven pom.xml
       inputs:
@@ -75,8 +75,8 @@ stages:
     - task: MavenAuthenticate@0
       displayName: Maven Authenticate
       inputs:
-        artifactsFeeds: 'amit-apps-ctw-shared, index-realtime-ctw-shared, singh-ctw-org-feed, singh-ctw-org-shared-feed'
-        mavenServiceConnections: 'singh-ptw-amit-apps-index-ptw ,singh-ptw-tech-eng-platform'
+        artifactsFeeds: 'amit-apps'
+        mavenServiceConnections: 'singh-ptw-amit-apps'
     - task: Maven@3
       displayName: Maven pom.xml
       inputs:
@@ -105,49 +105,3 @@ stages:
         command: 'buildAndPush'
         Dockerfile: 'Dockerfile'
         tags: 'v3'
-      
-- stage: Job_Worker_BuildV4
-  displayName: Job_Worker_Build_v4
-  jobs:
-  - job: 'Build_v4'
-    displayName: Building for myMarket-loader with v4 tag
-    pool:  
-      vmImage: ubuntu-latest
-    steps:   
-    - checkout:  git://amit-apps/myMarket-loader@eus2
-    - task: MavenAuthenticate@0
-      displayName: Maven Authenticate
-      inputs:
-        artifactsFeeds: 'amit-apps-ctw-shared, index-realtime-ctw-shared, singh-ctw-org-feed, singh-ctw-org-shared-feed'
-        mavenServiceConnections: 'singh-ptw-amit-apps-index-ptw ,singh-ptw-tech-eng-platform'
-    - task: Maven@3
-      displayName: Maven pom.xml
-      inputs:
-        mavenPomFile: 'pom.xml'
-        goals: 'clean install'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        javaHomeOption: 'JDKVersion'
-        mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: false
-        effectivePomSkip: false
-        sonarQubeRunAnalysis: false
-
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          echo 'Hello world'
-          ls target/*
-
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'ACR-amitacr-srvc-con'
-        repository: 'myrepo/amit-spring-app'
-        command: 'buildAndPush'
-        Dockerfile: 'Dockerfile'
-        tags: 'v4'
-      
-    
