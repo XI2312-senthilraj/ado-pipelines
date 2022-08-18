@@ -1,0 +1,40 @@
+parameters:
+  - name: environment
+    displayName: Select Deployment Environemt
+    type: string
+    values:
+      - 'UAT'
+      - 'PROD'
+      - 'BOTH'
+  - name: tag
+    displayName: Image tag
+    type: string
+    default: v3.1
+
+
+trigger: none
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: sift-azure-pipeline-templates
+      ref: 'refs/heads/feature/neu-prom'
+
+variables:
+  - template: azure-pipelines-variables-template.yml@templates
+
+stages:
+  - stage: Build
+    displayName: 'Maven Build'
+    jobs:
+      - template: azure-pipelines-build-template.yml@templates
+        parameters:
+          mavenGoals: 'clean verify assembly:single'
+          mavenOptions: '-Dmaven.test.skip=true -s /u/siftd01/.m2/settings.xml -gs /u/siftd01/.m2/settings.xml -U'
+
+  - template: k8s/sift/azure-pipelines-prom-docker-build-template-multi.yml@templates
+    parameters:
+      tag: ${{parameters.tag}}
+      environment: ${{parameters.environment}}
+      repo: 'sift/app/siftapp'
