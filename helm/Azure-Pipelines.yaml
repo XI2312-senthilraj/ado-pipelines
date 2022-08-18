@@ -26,7 +26,7 @@ resources:
 variables:
   - template: azure-pipelines-variables-template.yml@templates
 steps:
-  - template: k8s/azure-pipelines-helm-prom-config-template-multi.yml@templates
+  - template: k8s/azure-pipelines-helm-sift-config-template-multi.yml@templates
     parameters:
       environment: ${{parameters.environment}}
       valuesFile: 'devops/cloud-pipeline/helm/values-${{parameters.namespace}}.yml'
