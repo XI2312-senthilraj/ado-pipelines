@@ -33,7 +33,7 @@ stages:
           mavenGoals: 'clean verify assembly:single'
           mavenOptions: '-Dmaven.test.skip=true -s /u/siftd01/.m2/settings.xml -gs /u/siftd01/.m2/settings.xml -U'
 
-  - template: k8s/sift/azure-pipelines-prom-docker-build-template-multi.yml@templates
+  - template: k8s/sift/azure-pipelines-sift-docker-build-template-multi.yml@templates
     parameters:
       tag: ${{parameters.tag}}
       environment: ${{parameters.environment}}
