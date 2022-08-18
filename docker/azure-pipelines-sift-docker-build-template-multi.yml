@@ -1,0 +1,61 @@
+stages:
+- ${{ if eq(parameters.environment, 'UAT') }}:
+    - stage:
+      displayName: 'Build_and_push_docker_image_to_Test_ACR'
+      jobs:
+        - job: 'Params_Values'
+          pool:
+            name: $(dockerBuildPoolName)
+          steps:
+          - script: echo "Repo Name is  ${{parameters.repo}} "
+          - template: azure-pipelines-docker-build-template.yml@templates
+            parameters:
+              siftapp_non_prod_acr: $(push_acr_repo)
+              push_acr: $(push_acr_repo)
+              dockerFile: 'devops/cloud-pipeline/docker/Dockerfile'
+              tag: ${{parameters.tag}}
+              repo: ${{parameters.repo}}
+
+- ${{ if eq(parameters.environment, 'PROD') }}:
+    - stage:
+      displayName: 'Build_and_push_docker_image_to_Prod_ACR'
+      jobs:
+        - job: 'Build_and_push_docker_image_to_Prod_ACR'
+          pool:
+            name: $(dockerBuildPoolName)
+          steps:
+          - script: echo "ACR Name  Name is  $(push_acr_repo_prod)"
+          - template: azure-pipelines-docker-build-template.yml@templates
+            parameters:
+              push_acr: $(push_acr_repo_prod)
+              siftapp_non_prod_acr: $(push_acr_repo)
+              dockerFile: 'devops/cloud-pipeline/docker/Dockerfile'
+              tag: ${{parameters.tag}}
+              repo: ${{parameters.repo}}
+- ${{ if eq(parameters.environment, 'BOTH') }}:
+    - stage: 
+      displayName: 'Building and pushing images Prod and Non Prod ACR'
+      jobs:
+      - job: 'Docker_Build_for_Prod'
+        pool:
+          name: $(dockerBuildPoolName)
+        steps:
+        - template: azure-pipelines-docker-build-template.yml@templates
+          parameters:
+            push_acr: $(push_acr_repo)
+            siftapp_non_prod_acr: $(push_acr_repo)
+            dockerFile: 'devops/cloud-pipeline/docker/Dockerfile'
+            tag: ${{parameters.tag}}
+            repo: ${{parameters.repo}}
+
+      - job: 'Docker_Build_for_Non_Prod'
+        pool:
+          name: $(dockerBuildPoolName)
+        steps:
+          - template: azure-pipelines-docker-build-template.yml@templates
+            parameters:
+              push_acr: $(push_acr_repo_prod)
+              siftapp_non_prod_acr: $(push_acr_repo)
+              dockerFile: 'devops/cloud-pipeline/docker/Dockerfile'
+              tag: ${{parameters.tag}}
+              repo: ${{parameters.repo}}
