@@ -1,0 +1,33 @@
+parameters:
+  - name: Environment
+    displayName: Deployment Environment
+    type: string
+    default: UAT
+    values:
+      - UAT
+      - PROD
+  - name: namespace
+    displayName: namespace to deploy
+    type: string
+    default: test01
+    values:
+      - test01
+      - test02
+      - test03
+      - production
+
+trigger: none
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: ado-azure-pipeline-templates
+      ref: 'refs/heads/feature/neu-prom'
+variables:
+  - template: azure-pipelines-variables-template.yml@templates
+steps:
+  - template: k8s/azure-pipelines-helm-prom-config-template-multi.yml@templates
+    parameters:
+      environment: ${{parameters.environment}}
+      valuesFile: 'devops/cloud-pipeline/helm/values-${{parameters.namespace}}.yml'
+      namespace: ${{parameters.namespace}}
