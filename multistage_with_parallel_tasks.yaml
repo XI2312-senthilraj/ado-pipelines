@@ -18,7 +18,7 @@ stages:
               # Write your commands here
               
               echo 'Hello world'
-              echo. 'Environment from variable ' $(environment)
+              echo 'Environment from variable ' $(environment)
   - job: 'Secute_second_job'
     displayName: Building second_job
     pool:  
